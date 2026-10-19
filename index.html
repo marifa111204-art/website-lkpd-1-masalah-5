@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD 3 - Analisis Fenomena Flexing di Media Sosial (Studi Kasus Dina)</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        brandSky: {
+                            50: '#F0F9FF',
+                            100: '#E0F2FE',
+                            500: '#0EA5E9',
+                            600: '#0284C7',
+                            700: '#0369A1',
+                            900: '#0C4A6E',
+                        },
+                        brandAmber: {
+                            50: '#FFFBEB',
+                            100: '#FEF3C7',
+                            500: '#F59E0B',
+                            600: '#D97706',
+                            700: '#B45309',
+                        },
+                        brandRose: {
+                            50: '#FFF1F2',
+                            100: '#FFE4E6',
+                            500: '#F43F5E',
+                            600: '#E11D48',
+                            700: '#BE123C',
+                        },
+                        brandPurple: {
+                            50: '#FAF5FF',
+                            100: '#F3E8FF',
+                            600: '#9333EA',
+                            700: '#7E22CE',
+                        },
+                        brandEmerald: {
+                            50: '#ECFDF5',
+                            100: '#D1FAE5',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F8FAFC;
+            color: #1E293B;
+        }
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            direction: rtl;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+            }
+            .card-box {
+                border: 1px solid #CBD5E1 !important;
+                box-shadow: none !important;
+                break-inside: avoid;
+            }
+            textarea, input {
+                border: none !important;
+                border-bottom: 1px dashed #64748B !important;
+                resize: none !important;
+                background: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen pb-16">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-brandSky-600 text-white p-2.5 rounded-xl font-bold flex items-center justify-center w-10 h-10 shadow-md">
+                    <i class="fa-solid fa-mobile-screen-button text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm font-extrabold text-slate-800 leading-tight">LKPD 3 Digital Interactive</h1>
+                    <p class="text-xs text-slate-500 font-medium">Model Pembelajaran: Problem Based Learning (PBL)</p>
+                </div>
+            </div>
+
+            <!-- Actions & Timer -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                <!-- Concept Reference Button -->
+                <button onclick="toggleModal('modalKonsep')" class="text-xs sm:text-sm bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold px-3 py-1.5 rounded-lg border border-purple-200 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Panduan Istilah</span>
+                </button>
+                
+                <!-- Dalil Reference Button -->
+                <button onclick="toggleModal('modalDalil')" class="text-xs sm:text-sm bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-3 py-1.5 rounded-lg border border-emerald-200 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-quran"></i>
+                    <span>Referensi Dalil</span>
+                </button>
+
+                <!-- Timer Button -->
+                <div class="bg-amber-50 text-amber-800 border border-amber-200 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="timerDisplay">45:00</span>
+                    <button onclick="toggleTimer()" id="timerBtn" class="text-amber-900 hover:text-amber-600 ml-1">
+                        <i class="fa-solid fa-play text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Print Button -->
+                <button onclick="window.print()" class="bg-brandSky-700 hover:bg-brandSky-900 text-white text-xs sm:text-sm font-semibold px-3.5 py-1.5 rounded-lg shadow transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i>
+                    <span class="hidden sm:inline">Cetak / Export</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-6">
+
+        <!-- Status Toast Banner -->
+        <div id="saveToast" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+            <i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i>
+            <span>Jawaban LKPD 3 otomatis tersimpan!</span>
+        </div>
+
+        <!-- Main Banner Header Card -->
+        <div class="bg-gradient-to-r from-sky-800 via-brandSky-700 to-indigo-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden mb-6">
+            <!-- Decorative Background Shapes -->
+            <div class="absolute -right-12 -bottom-12 w-56 h-56 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute left-1/3 -top-12 w-40 h-40 bg-amber-400/20 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="space-y-2 max-w-2xl">
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                        <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/30">LEMBAR KERJA PESERTA DIDIK (LKPD) 3</span>
+                        <span class="bg-amber-400 text-amber-950 text-xs font-extrabold px-3 py-1 rounded-full shadow-sm">PBL Method</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Analisis Fenomena Flexing di Media Sosial</h1>
+                    <p class="text-sky-100 text-sm sm:text-base font-medium">Materi: Israf, Tabzir, Ria, dan Sumah | Pendidikan Agama Islam & Budi Pekerti</p>
+                </div>
+
+                <!-- Quote Box -->
+                <div class="bg-white/15 backdrop-blur-md border border-white/30 p-4 rounded-2xl max-w-xs text-center shadow-inner self-stretch flex flex-col justify-center">
+                    <i class="fa-solid fa-quote-left text-amber-300 text-xl mb-1 block"></i>
+                    <p class="text-xs sm:text-sm font-semibold italic leading-relaxed text-amber-100">
+                        "Nikmat Allah bukan untuk dipamerkan, tetapi untuk disyukuri."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student & Group Identity Section -->
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 card-box mb-6">
+            <div class="flex items-center gap-2 mb-4 pb-2 border-b border-slate-100">
+                <i class="fa-solid fa-users-viewfinder text-brandSky-600 text-lg"></i>
+                <h2 class="font-bold text-slate-800 text-base">Identitas Kelompok</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+                <!-- Group Name -->
+                <div class="md:col-span-4">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Nama Kelompok</label>
+                    <input type="text" id="namaKelompok" oninput="saveData()" placeholder="Tuliskan nama kelompok..." class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none transition">
+                </div>
+
+                <!-- Group Members -->
+                <div class="md:col-span-8">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Anggota Kelompok</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                        <input type="text" id="anggota1" oninput="saveData()" placeholder="1. Nama Anggota 1" class="px-3 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none transition">
+                        <input type="text" id="anggota2" oninput="saveData()" placeholder="2. Nama Anggota 2" class="px-3 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none transition">
+                        <input type="text" id="anggota3" oninput="saveData()" placeholder="3. Nama Anggota 3" class="px-3 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none transition">
+                        <input type="text" id="anggota4" oninput="saveData()" placeholder="4. Nama Anggota 4" class="px-3 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none transition">
+                        <input type="text" id="anggota5" oninput="saveData()" placeholder="5. Nama Anggota 5" class="px-3 py-1.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none transition">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION A: ORIENTASI MASALAH -->
+        <section class="mb-6">
+            <div class="bg-white rounded-3xl border border-amber-200/80 shadow-sm overflow-hidden card-box">
+                <!-- Section Title -->
+                <div class="bg-amber-500 text-white p-4 sm:p-5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center font-black text-lg">A</span>
+                        <h2 class="font-extrabold text-base sm:text-lg">Orientasi Masalah</h2>
+                    </div>
+                    <span class="text-xs bg-amber-600/60 px-3 py-1 rounded-full font-medium">Studi Kasus Digital</span>
+                </div>
+
+                <div class="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Case Narrative Box -->
+                    <div class="lg:col-span-6 bg-amber-50/60 rounded-2xl p-5 border border-amber-200 space-y-4">
+                        <div class="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                            <i class="fa-solid fa-book-open text-amber-600"></i>
+                            <span>Bacalah kasus berikut!</span>
+                        </div>
+
+                        <!-- Case Card Illustration & Text -->
+                        <div class="bg-white p-4 rounded-xl border border-amber-100 shadow-sm flex flex-col sm:flex-row items-start gap-4">
+                            <div class="w-16 h-16 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-3xl shrink-0 shadow-inner self-center sm:self-start">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded">Kasus Dina</span>
+                                    <span class="text-[10px] text-slate-400"><i class="fa-solid fa-hashtag"></i> Gadget & Lifestyle</span>
+                                </div>
+                                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                                    "<strong>Dina</strong> <u>meminta orang tuanya membelikan ponsel baru yang mahal meskipun ponsel lamanya masih berfungsi baik</u>. Setelah dibelikan, Dina <u>sering membuat video yang memperlihatkan merek ponselnya dan membandingkannya dengan ponsel teman-temannya</u>. Ia berharap teman-temannya <u>menganggap dirinya paling kaya dan memujinya</u>. Ia juga <u>mengajak teman-temannya membeli aksesori mahal agar terlihat keren di media sosial</u>."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Problem Question Input -->
+                    <div class="lg:col-span-6 flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex items-center gap-2 text-brandSky-900 font-bold text-sm mb-2">
+                                <span class="w-6 h-6 rounded-full bg-brandSky-600 text-white flex items-center justify-center text-xs font-bold">?</span>
+                                <span>Pertanyaan masalah:</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-700 font-semibold mb-3 leading-relaxed">
+                                <u>Menurut kelompok kalian</u>, apakah tindakan Dina termasuk bentuk syukur atau dapat mengarah pada <strong>israf, tabzir, ria, atau sumah</strong>? Jelaskan alasan kalian berdasarkan ajaran Islam!
+                            </p>
+                            <textarea id="orientasiJawaban" oninput="saveData()" rows="6" placeholder="Tuliskan jawaban analisis masalah kelompok di sini mengenai kasus Dina..." class="w-full p-3.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-amber-500 outline-none leading-relaxed shadow-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION B: PENYELIDIKAN DAN ANALISIS -->
+        <section class="mb-6">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden card-box">
+                <!-- Section Title -->
+                <div class="bg-brandSky-600 text-white p-4 sm:p-5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center font-black text-lg">B</span>
+                        <h2 class="font-extrabold text-base sm:text-lg">Penyelidikan dan Analisis</h2>
+                    </div>
+                    <span class="text-xs bg-brandSky-700 px-3 py-1 rounded-full font-medium">Tabel Diskusi Kelompok</span>
+                </div>
+
+                <div class="p-4 sm:p-6">
+                    <p class="text-xs sm:text-sm text-slate-600 font-medium mb-4">
+                        Lengkapi tabel berikut berdasarkan hasil diskusi kelompok!
+                    </p>
+
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider border-b border-slate-200">
+                                    <th class="py-3.5 px-4 w-1/3 font-extrabold text-slate-800">Aspek yang Dianalisis</th>
+                                    <th class="py-3.5 px-4 w-2/3 font-extrabold text-slate-800 bg-brandSky-50/50">Hasil Diskusi Kelompok</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-sm">
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td class="py-4 px-4 font-semibold text-slate-800 bg-slate-50/50 align-top">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs flex items-center justify-center">1</span>
+                                            <span>Masalah utama dalam kasus</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 bg-white">
+                                        <textarea id="analisis1" oninput="saveData()" rows="3" placeholder="Jelaskan titik masalah utama dari fenomena flexing Dina di atas..." class="w-full p-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none leading-relaxed"></textarea>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 2 -->
+                                <tr>
+                                    <td class="py-4 px-4 font-semibold text-slate-800 bg-slate-50/50 align-top">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs flex items-center justify-center shrink-0">2</span>
+                                            <div>
+                                                <span>Dalil yang relevan</span>
+                                                <span class="block text-[11px] font-normal text-slate-500">(Q.S. Al-Isra': 26–27, Al-Ma'un: 4–7, Al-Baqarah: 264)</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 bg-white">
+                                        <textarea id="analisis2" oninput="saveData()" rows="3" placeholder="Tuliskan ringkasan / keterkaitan ayat Al-Qur'an dengan kasus Dina..." class="w-full p-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none leading-relaxed"></textarea>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 3 -->
+                                <tr>
+                                    <td class="py-4 px-4 font-semibold text-slate-800 bg-slate-50/50 align-top">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs flex items-center justify-center shrink-0">3</span>
+                                            <span>Bentuk perilaku <br><span class="text-xs text-slate-500 font-normal">(israf / tabzir / ria / sumah)</span></span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 bg-white">
+                                        <textarea id="analisis3" oninput="saveData()" rows="3" placeholder="Sebutkan dan tunjukkan bentuk perilaku yang ada dalam kasus Dina..." class="w-full p-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none leading-relaxed"></textarea>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 4 -->
+                                <tr>
+                                    <td class="py-4 px-4 font-semibold text-slate-800 bg-slate-50/50 align-top">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs flex items-center justify-center shrink-0">4</span>
+                                            <span>Bahaya atau dampak perilaku tersebut</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 bg-white">
+                                        <textarea id="analisis4" oninput="saveData()" rows="3" placeholder="Jelaskan dampak negatif bagi Dina sendiri maupun orang lain..." class="w-full p-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none leading-relaxed"></textarea>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 5 -->
+                                <tr>
+                                    <td class="py-4 px-4 font-semibold text-slate-800 bg-slate-50/50 align-top">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs flex items-center justify-center shrink-0">5</span>
+                                            <span>Bagaimana membedakan syukur dengan flexing?</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-3 bg-white">
+                                        <textarea id="analisis5" oninput="saveData()" rows="3" placeholder="Jelaskan perbedaan mendasar antara rasa syukur dan flexing..." class="w-full p-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brandSky-500 outline-none leading-relaxed"></textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION C: SOLUSI -->
+        <section class="mb-6">
+            <div class="bg-white rounded-3xl border border-purple-200/80 shadow-sm overflow-hidden card-box">
+                <!-- Section Title -->
+                <div class="bg-purple-700 text-white p-4 sm:p-5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center font-black text-lg">C</span>
+                        <h2 class="font-extrabold text-base sm:text-lg">Solusi</h2>
+                    </div>
+                    <span class="text-xs bg-purple-800 px-3 py-1 rounded-full font-medium">Rencana Aksi Kelompok</span>
+                </div>
+
+                <div class="p-5 sm:p-6 space-y-5">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3">
+                            Tuliskan solusi kelompok untuk menghindari perilaku israf, tabzir, ria, dan sumah di media sosial!
+                        </h3>
+                        <div class="space-y-2.5">
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-800 font-bold text-xs flex items-center justify-center shrink-0">1.</span>
+                                <input type="text" id="solusi1" oninput="saveData()" placeholder="Solusi poin 1..." class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-800 font-bold text-xs flex items-center justify-center shrink-0">2.</span>
+                                <input type="text" id="solusi2" oninput="saveData()" placeholder="Solusi poin 2..." class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none">
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-800 font-bold text-xs flex items-center justify-center shrink-0">3.</span>
+                                <input type="text" id="solusi3" oninput="saveData()" placeholder="Solusi poin 3..." class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <!-- Manajemen Harta Card -->
+                        <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-200/80 space-y-2">
+                            <div class="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wide">
+                                <i class="fa-solid fa-coins text-amber-600 text-base"></i>
+                                <span>Manajemen harta:</span>
+                            </div>
+                            <textarea id="solusiManajemenHarta" oninput="saveData()" rows="3" placeholder="Bagaimana cara Dina / kita mengelola harta & pengeluaran gadget/barang secara bijak & Islami?" class="w-full p-3 text-xs sm:text-sm bg-white border border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none leading-relaxed"></textarea>
+                        </div>
+
+                        <!-- Tazkiyatun Nufus Card -->
+                        <div class="bg-sky-50/70 p-4 rounded-2xl border border-sky-200/80 space-y-2">
+                            <div class="flex items-center gap-2 text-sky-900 font-bold text-xs uppercase tracking-wide">
+                                <i class="fa-solid fa-brain text-sky-600 text-base"></i>
+                                <span>Cara menjaga dan mengawasi niat (tazkiyatun nufus):</span>
+                            </div>
+                            <textarea id="solusiTazkiyatunNafss" oninput="saveData()" rows="3" placeholder="Bagaimana cara menjaga keikhlasan niat di hati dari ria & sumah?" class="w-full p-3 text-xs sm:text-sm bg-white border border-sky-200 rounded-xl focus:ring-2 focus:ring-sky-500 outline-none leading-relaxed"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION D: KESIMPULAN KELOMPOK -->
+        <section class="mb-6">
+            <div class="bg-white rounded-3xl border border-emerald-200/80 shadow-sm overflow-hidden card-box">
+                <!-- Section Title -->
+                <div class="bg-emerald-600 text-white p-4 sm:p-5 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center font-black text-lg">D</span>
+                        <h2 class="font-extrabold text-base sm:text-lg">Kesimpulan Kelompok</h2>
+                    </div>
+                    <span class="text-xs bg-emerald-700 px-3 py-1 rounded-full font-medium">Refleksi Akhir</span>
+                </div>
+
+                <div class="p-5 sm:p-6 space-y-5">
+                    <div>
+                        <p class="text-xs sm:text-sm text-slate-700 font-semibold mb-2">
+                            Berdasarkan hasil diskusi, kami menyimpulkan bahwa bersyukur atas nikmat Allah harus dilakukan dengan:
+                        </p>
+                        <textarea id="kesimpulanKelompok" oninput="saveData()" rows="4" placeholder="Tuliskan kesimpulan akhir kelompok Anda di sini..." class="w-full p-3.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none leading-relaxed shadow-sm"></textarea>
+                    </div>
+
+                    <!-- Highlight Quote Card -->
+                    <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 text-center relative overflow-hidden">
+                        <p class="text-xs sm:text-sm font-semibold text-emerald-900 leading-relaxed italic">
+                            ✨ "Hidup sederhana, menjaga niat, dan menggunakan harta dengan bijak adalah bagian dari syukur yang sesungguhnya."
+                        </p>
+                    </div>
+
+                    <!-- Presenter & Teacher Signature Row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-slate-100">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Nama Presenter :</label>
+                            <input type="text" id="namaPresenter" oninput="saveData()" placeholder="Tulis nama juru bicara / presenter kelompok..." class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Tanda Tangan Guru :</label>
+                            <div class="h-10 border border-dashed border-slate-300 rounded-xl bg-slate-50 flex items-center justify-center text-xs text-slate-400 font-medium">
+                                (Kolom Validasi & Penilaian Guru PAI)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Floating Controls (no-print) -->
+        <div class="no-print bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-lg flex flex-wrap items-center justify-between gap-3 mb-10">
+            <div class="text-xs text-slate-500 flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-500"></i>
+                <span>Status: <strong id="saveStatusText" class="text-slate-700">Tersimpan di Browser</strong></span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="clearForm()" class="text-xs text-red-600 hover:text-red-700 font-semibold px-3 py-2 rounded-lg hover:bg-red-50 transition border border-transparent hover:border-red-200">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Reset Isian
+                </button>
+                <button onclick="window.print()" class="bg-brandSky-600 hover:bg-brandSky-700 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>Cetak / Simpan PDF</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL 1: Referensi Dalil Modal -->
+    <div id="modalDalil" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden transform scale-95 transition-transform duration-300">
+            <!-- Modal Header -->
+            <div class="bg-brandSky-700 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-book-quran text-amber-300 text-xl"></i>
+                    <h3 class="font-bold text-base">Referensi Dalil Terkait</h3>
+                </div>
+                <button onclick="toggleModal('modalDalil')" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 overflow-y-auto space-y-5 text-sm text-slate-700">
+                <!-- Verse 1 -->
+                <div class="bg-sky-50/60 p-4 rounded-2xl border border-sky-200 space-y-2">
+                    <span class="text-xs font-bold bg-sky-200 text-sky-900 px-2.5 py-1 rounded-md">Q.S. Al-Isra': 26–27 (Larangan Tabzir)</span>
+                    <p class="arabic-text text-xl text-right leading-loose font-arabic text-sky-950 pt-1">
+                        إِنَّ الْمُبَذِّرِينَ كَانُوا إِخْوَانَ الشَّيَاطِينِ ۖ وَكَانَ الشَّيْطَانُ لِرَبِّهِ كَفُورًا
+                    </p>
+                    <p class="text-xs text-slate-600 leading-relaxed italic pt-1">
+                        <strong>Artinya:</strong> "Sesungguhnya orang-orang yang pemboros itu adalah saudara-saudara setan dan setan itu adalah sangat ingkar kepada Tuhannya."
+                    </p>
+                </div>
+
+                <!-- Verse 2 -->
+                <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 space-y-2">
+                    <span class="text-xs font-bold bg-amber-200 text-amber-900 px-2.5 py-1 rounded-md">Q.S. Al-Ma'un: 4–7 (Ancaman Bagi Perilaku Ria)</span>
+                    <p class="arabic-text text-xl text-right leading-loose font-arabic text-amber-950 pt-1">
+                        فَوَيْلٌ لِّلْمُصَلِّينَ ۝ الَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ ۝ الَّذِينَ هُمْ يُرَاءُونَ ۝ وَيَمْنَعُونَ الْمَاعُونَ
+                    </p>
+                    <p class="text-xs text-slate-600 leading-relaxed italic pt-1">
+                        <strong>Artinya:</strong> "Maka celakalah orang-orang yang salat, (yaitu) orang-orang yang lalai terhadap salatnya, yang berbuat ria, dan enggan (memberikan) bantuan."
+                    </p>
+                </div>
+
+                <!-- Verse 3 -->
+                <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-200 space-y-2">
+                    <span class="text-xs font-bold bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-md">Q.S. Al-Baqarah: 264 (Menghapus Pahala Kebaikan)</span>
+                    <p class="arabic-text text-xl text-right leading-loose font-arabic text-emerald-950 pt-1">
+                        يَا أَيُّهَا الَّذِينَ آمَنُوا لَا تُبْطِلُوا صَدَقَاتِكُم بِالْمَنِّ وَالْأَذَىٰ كَالَّذِي يُنفِقُ مَالَهُ رِئَاءَ النَّاسِ
+                    </p>
+                    <p class="text-xs text-slate-600 leading-relaxed italic pt-1">
+                        <strong>Artinya:</strong> "Wahai orang-orang yang beriman! Janganlah kamu merusak sedekahmu dengan menyebut-nyebutnya dan menyakiti (perasaan penerima), seperti orang yang menginfakkan hartanya karena ria kepada manusia..."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 text-right">
+                <button onclick="toggleModal('modalDalil')" class="bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-slate-900 transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Panduan Istilah Konsep Modal -->
+    <div id="modalKonsep" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden transform scale-95 transition-transform duration-300">
+            <!-- Modal Header -->
+            <div class="bg-purple-700 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-purple-200 text-xl"></i>
+                    <h3 class="font-bold text-base">Panduan Istilah Konsep Akhlak</h3>
+                </div>
+                <button onclick="toggleModal('modalKonsep')" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 overflow-y-auto space-y-4 text-sm text-slate-700">
+                <div class="p-3.5 bg-amber-50 rounded-xl border border-amber-200">
+                    <h4 class="font-bold text-amber-900 text-xs uppercase tracking-wide mb-1">1. Israf (Berlebihan)</h4>
+                    <p class="text-xs leading-relaxed text-slate-600">
+                        Sikap melampaui batas wajar dalam menggunakan harta atau barang, meskipun pada hal yang halal.
+                    </p>
+                </div>
+
+                <div class="p-3.5 bg-red-50 rounded-xl border border-red-200">
+                    <h4 class="font-bold text-red-900 text-xs uppercase tracking-wide mb-1">2. Tabzir (Mubazir / Menyia-nyiakan)</h4>
+                    <p class="text-xs leading-relaxed text-slate-600">
+                        Mengeluarkan harta untuk hal-hal yang tidak ada manfaatnya (sia-sia) atau untuk maksiat/pamer kepada manusia.
+                    </p>
+                </div>
+
+                <div class="p-3.5 bg-purple-50 rounded-xl border border-purple-200">
+                    <h4 class="font-bold text-purple-900 text-xs uppercase tracking-wide mb-1">3. Ria (Pamer Penglihatan)</h4>
+                    <p class="text-xs leading-relaxed text-slate-600">
+                        Melakukan amal atau kebaikan agar diperhatikan, dilihat, dan dipuji oleh manusia.
+                    </p>
+                </div>
+
+                <div class="p-3.5 bg-sky-50 rounded-xl border border-sky-200">
+                    <h4 class="font-bold text-sky-900 text-xs uppercase tracking-wide mb-1">4. Sumah (Pamer Pendengaran)</h4>
+                    <p class="text-xs leading-relaxed text-slate-600">
+                        Menceritakan atau memperdengarkan kebaikan/keroyalan yang telah dilakukan kepada orang lain agar mendapat pujian.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 text-right">
+                <button onclick="toggleModal('modalKonsep')" class="bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-slate-900 transition">Paham, Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // List of form field IDs for localStorage persistence
+        const lkpd3Fields = [
+            'namaKelompok', 'anggota1', 'anggota2', 'anggota3', 'anggota4', 'anggota5',
+            'orientasiJawaban',
+            'analisis1', 'analisis2', 'analisis3', 'analisis4', 'analisis5',
+            'solusi1', 'solusi2', 'solusi3', 'solusiManajemenHarta', 'solusiTazkiyatunNafss',
+            'kesimpulanKelompok', 'namaPresenter'
+        ];
+
+        // Save form data to localStorage
+        function saveData() {
+            const data = {};
+            lkpd3Fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    data[id] = el.value;
+                }
+            });
+            localStorage.setItem('lkpd3_dina_flexing_data', JSON.stringify(data));
+            showToast();
+        }
+
+        // Load form data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('lkpd3_dina_flexing_data');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    lkpd3Fields.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el && data[id] !== undefined) {
+                            el.value = data[id];
+                        }
+                    });
+                } catch (e) {
+                    console.error("Gagal memuat data tersimpan", e);
+                }
+            }
+        }
+
+        // Clear Form Data
+        function clearForm() {
+            if (confirm("Apakah Anda yakin ingin mengosongkan semua jawaban LKPD 3 ini?")) {
+                localStorage.removeItem('lkpd3_dina_flexing_data');
+                lkpd3Fields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                document.getElementById('saveStatusText').textContent = 'Formulir dibersihkan';
+            }
+        }
+
+        // Toast notification handler
+        let toastTimeout;
+        function showToast() {
+            const toast = document.getElementById('saveToast');
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2000);
+        }
+
+        // Modal toggle script
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const isHidden = modal.classList.contains('opacity-0');
+
+            if (isHidden) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.firstElementChild.classList.remove('scale-95');
+                modal.firstElementChild.classList.add('scale-100');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.firstElementChild.classList.remove('scale-100');
+                modal.firstElementChild.classList.add('scale-95');
+            }
+        }
+
+        // Classroom timer functionality
+        let timeLeft = 45 * 60; // 45 Minutes
+        let timerInterval = null;
+        let isRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timerBtn');
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                btn.innerHTML = '<i class="fa-solid fa-play text-xs"></i>';
+            } else {
+                isRunning = true;
+                btn.innerHTML = '<i class="fa-solid fa-pause text-xs"></i>';
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        alert("Waktu pengerjaan LKPD telah habis!");
+                    }
+                }, 1000);
+            }
+        }
+
+        // Load data on page init
+        window.onload = function() {
+            loadData();
+            updateTimerDisplay();
+        };
+    </script>
+</body>
+</html>
